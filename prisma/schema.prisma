@@ -1,0 +1,118 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Roles {
+  ADMIN
+  USER
+  BUYER
+  SELLER
+}
+
+model User {
+  id            String        @id @default(uuid())
+  username      String        @db.VarChar(20)
+  email         String        @unique @db.VarChar(200)
+  phone         String        @unique @db.VarChar(20)
+  password      String        @db.VarChar(255)
+  role          Roles         @default(USER)
+  emailVerified Boolean       @default(false)
+
+  buyerProfile  BuyerProfile? 
+  addresses     Address[]     
+  farmer        Farmer?       
+  otp           Otp?          
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model BuyerProfile {
+  id            String    @id @default(uuid())
+  userId        String    @unique
+  firstName     String    @db.VarChar(100)
+  lastName      String    @db.VarChar(100)
+  avatarUrl     String?
+  bio           String?
+  dateOfBirth   DateTime?
+  phoneVerified Boolean   @default(false)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Otp {
+  id        String   @id @default(uuid())
+  userId    String   @unique 
+  otpCode   String   @db.VarChar(6)
+  createdAt DateTime @default(now())
+  expiresAt DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Address {
+  id        String   @id @default(uuid())
+  userId    String
+  city      String   @db.VarChar(100)
+  region    String   @db.VarChar(100)
+  country   String   @default("RW") @db.Char(2)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Farmer {
+  id              String    @id @default(uuid())
+  farmerId        String    @unique
+  name            String    @db.VarChar(200)
+  description     String?
+  locationLat     Float?
+  locationLng     Float?
+  sizeHectares    Float?
+  certifications  String[]
+  establishedDate DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  user     User      @relation(fields: [farmerId], references: [id], onDelete: Cascade)
+  products Product[]
+}
+
+model Category {
+  id          String   @id @default(uuid())
+  name        String   @unique @db.VarChar(100)
+  description String?
+  parentId    String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  parent   Category?  @relation("CategoryToCategory", fields: [parentId], references: [id], onDelete: Cascade)
+  children Category[] @relation("CategoryToCategory")
+  products Product[]
+}
+
+model Product {
+  id            String   @id @default(uuid())
+  farmerId      String
+  categoryId    String
+  name          String   @db.VarChar(200)
+  description   String?
+  price         Float
+  unit          String   @db.VarChar(20)
+  stockQuantity Int?     @default(0)
+  weightKg      Float?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  farmer   Farmer   @relation(fields: [farmerId], references: [id], onDelete: Cascade)
+  category Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+}
