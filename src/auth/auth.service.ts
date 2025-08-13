@@ -79,7 +79,6 @@ export class AuthService {
         name: user.username,
         role: user.role,
       },
-      token,
     };
   }
   async login(loginAuthDto: loginAuthDto) {
@@ -123,8 +122,11 @@ export class AuthService {
     };
   }
   async verifyOtp(verfiyDto) {
+    if (!verfiyDto.userId) {
+      throw new BadRequestException('userId is required');
+    }
     const user = await this.prisma.user.findUnique({
-      where: { id:verfiyDto.id},
+      where: { id: verfiyDto.userId },
     });
 
     if (!user) {
