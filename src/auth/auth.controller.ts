@@ -21,10 +21,13 @@ export class AuthController {
     return this.authService.login(loginAuthDto);
   }
 
+  @UseGuards(AuthGuard)
   @Post('verify')
-  verfiy(@Body() verifyOtp:verifyOtpDto){
-    return this.authService.verifyOtp(verifyOtp)
+  verfiy(@Body() verifyOtp:verifyOtpDto,@Req() req){
+    const userId = req.user.id;
+    return this.authService.verifyOtp(verifyOtp,userId)
   }
+  
 
   @UseGuards(AuthGuard)
   @Get('profile')

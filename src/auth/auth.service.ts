@@ -66,10 +66,20 @@ export class AuthService {
 
     await this.emailService.sendOtpEmail(user.email, otpCode);
 
+    const token = jwt.sign(
+      { sub: user.id, email: user.email, role: user.role },
+      this.jwtSecret,
+      { expiresIn: '1h' },
+    );
+
     return {
-      message: 'Register successfuly',
-      user,
-      otp: otpCode,
+      user: {
+        id: user.id,
+        email: user.email,
+        name: user.username,
+        role: user.role,
+      },
+      token,
     };
   }
   async login(loginAuthDto: loginAuthDto) {
@@ -113,12 +123,11 @@ export class AuthService {
     };
   }
 
-  async verifyOtp(verfiyDto) {
-
+  async verifyOtp(verfiyDto, userId) {
     const user = await this.prisma.user.findUnique({
-      where: { 
-        email:verfiyDto.email
-       },
+      where: {
+        id: userId,
+      },
     });
 
     if (!user) {
@@ -143,7 +152,6 @@ export class AuthService {
     if (otpRecord.expiresAt < new Date()) {
       throw new BadRequestException('OTP expired');
     }
-
 
     await this.prisma.user.update({
       where: { id: user.id },
