@@ -161,7 +161,10 @@ export class AuthService {
       where: { id: otpRecord.id },
     });
 
-    return { message: 'Email verified successfully' };
+    return {
+      success: true,
+      message: 'Email verified successfully',
+    };
   }
 
   async profile(userId: string) {
