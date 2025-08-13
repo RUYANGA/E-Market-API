@@ -163,7 +163,7 @@ export class AuthService {
     return {
       success: true,
       message: 'Email verified successfully',
-      token
+      token,
     };
   }
 
@@ -174,15 +174,17 @@ export class AuthService {
         id: true,
         username: true,
         email: true,
-        phone:true,
+        phone: true,
         role: true,
         createdAt: true,
-        emailVerified:true
+        emailVerified: true,
       },
     });
+
     if (!user) {
       throw new UnauthorizedException('User not found');
     }
-    return { user };
+
+    return user;
   }
 }
