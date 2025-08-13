@@ -3,8 +3,9 @@ import { Request } from 'express';
 import * as jwt from 'jsonwebtoken';
 
 interface JwtPayload {
-  userId: string;
+  id: string;
   email: string;
+  role: string;
 }
 
 @Injectable()
@@ -18,17 +19,26 @@ export class AuthGuard implements CanActivate {
     }
 
     const [type, token] = authHeader.split(' ');
-    
+
     if (type !== 'Bearer' || !token) {
       throw new UnauthorizedException('Invalid authorization header format');
     }
 
     try {
-      const payload = jwt.verify(token, process.env.JWT_SECRET || 'your_jwt_secret') as JwtPayload;
+      const payload = jwt.verify(
+        token,
+        process.env.JWT_SECRET || 'your_jwt_secret_key'
+      ) as JwtPayload;
+
+      if (!payload.id) {
+        throw new UnauthorizedException('Token payload missing user ID');
+      }
 
       req['user'] = {
-        id: payload.userId,
+        id: payload.id,     // always consistent with token signing
         email: payload.email,
+        role:payload.role
+
       };
 
       return true;

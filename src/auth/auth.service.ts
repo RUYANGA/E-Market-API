@@ -122,12 +122,9 @@ export class AuthService {
       token,
     };
   }
-
   async verifyOtp(verfiyDto, userId) {
     const user = await this.prisma.user.findUnique({
-      where: {
-        id: userId,
-      },
+      where: { id: userId },
     });
 
     if (!user) {
@@ -157,6 +154,7 @@ export class AuthService {
       where: { id: user.id },
       data: { emailVerified: true },
     });
+
     await this.prisma.otp.delete({
       where: { id: otpRecord.id },
     });

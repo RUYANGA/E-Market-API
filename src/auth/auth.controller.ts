@@ -1,4 +1,12 @@
-import { Controller, Post, Body, Req, Get, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  Req,
+  Get,
+  UseGuards,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { RegisterAuthDto } from './dto/register-auth.dto';
 import { loginAuthDto } from './dto/login-auth.dto';
@@ -23,11 +31,15 @@ export class AuthController {
 
   @UseGuards(AuthGuard)
   @Post('verify')
-  verfiy(@Body() verifyOtp:verifyOtpDto,@Req() req){
-    const userId = req.user.id;
-    return this.authService.verifyOtp(verifyOtp,userId)
+  verify(@Body() verifyOtp: verifyOtpDto, @Req() req) {
+    const userId = req.user?.id;
+
+    if (!userId) {
+      throw new UnauthorizedException('Invalid token or user not found');
+    }
+
+    return this.authService.verifyOtp(verifyOtp, userId);
   }
-  
 
   @UseGuards(AuthGuard)
   @Get('profile')
