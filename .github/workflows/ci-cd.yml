@@ -2,16 +2,16 @@ name: CI/CD Pipeline
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
 
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
 
     steps:
-      # 1) Checkout your code
+      # 1) Checkout code
       - name: Checkout code
         uses: actions/checkout@v4
 
@@ -29,6 +29,7 @@ jobs:
       - name: Build NestJS app
         run: npm run build
 
-      # 5) Run tests
+      # 5) Run tests (workflow will fail if tests fail)
       - name: Run tests
         run: npm run test
+        continue-on-error: false
