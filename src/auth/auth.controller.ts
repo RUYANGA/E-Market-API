@@ -28,7 +28,7 @@ export class AuthController {
   update(@Body() loginAuthDto: loginAuthDto) {
     return this.authService.login(loginAuthDto);
   }
-  
+
   @Post('verify')
   verify(@Body() verifyOtp: VerifyOtpDto) {
     return this.authService.verifyOtp(verifyOtp);
@@ -37,6 +37,7 @@ export class AuthController {
   @UseGuards(AuthGuard)
   @Get('profile')
   profile(@Req() req) {
-    return this.authService.profile(req);
+    const userId=req.user.id
+    return this.authService.profile(userId);
   }
 }
