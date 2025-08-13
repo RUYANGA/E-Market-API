@@ -24,25 +24,23 @@ export class AuthGuard implements CanActivate {
     }
 
     const [type, token] = authHeader.split(' ');
-
     if (type !== 'Bearer' || !token) {
       throw new UnauthorizedException('Invalid authorization header format');
     }
 
     try {
-      const payload = jwt.verify(
+      const decoded = jwt.verify(
         token,
-        process.env.JWT_SECRET || 'your_jwt_secret_key',
-      ) as JwtPayload;
+        "mysecuritykey",
+      ) as jwt.JwtPayload;
 
-      if (!payload.id) {
+      if (!decoded || !decoded.id) {
         throw new UnauthorizedException('Token payload missing user ID');
       }
-
       req['user'] = {
-        id: payload.id,
-        email: payload.email,
-        role: payload.role,
+        id: decoded.id as string,
+        email: decoded.email as string,
+        role: decoded.role as string,
       };
 
       return true;
