@@ -28,8 +28,7 @@ export class AuthController {
   update(@Body() loginAuthDto: loginAuthDto) {
     return this.authService.login(loginAuthDto);
   }
-
-//  @UseGuards(AuthGuard)
+  
   @Post('verify')
   verify(@Body() verifyOtp: VerifyOtpDto) {
     return this.authService.verifyOtp(verifyOtp);

@@ -65,13 +65,6 @@ export class AuthService {
     });
 
     await this.emailService.sendOtpEmail(user.email, otpCode);
-
-    const token = jwt.sign(
-      { sub: user.id, email: user.email, role: user.role },
-      'mysecuritykey',
-      { expiresIn: '1h' },
-    );
-
     return {
       user: {
         id: user.id,
@@ -106,7 +99,7 @@ export class AuthService {
     }
 
     const token = jwt.sign(
-      { sub: user.id, email: user.email, role: user.role },
+      { id: user.id, email: user.email, role: user.role },
       process.env.JWT_SECRET || 'your_jwt_secret_key',
       { expiresIn: '1h' },
     );
@@ -162,7 +155,7 @@ export class AuthService {
     });
 
     const token = jwt.sign(
-      { sub: user.id, email: user.email, role: user.role },
+      { id: user.id, email: user.email, role: user.role },
       process.env.JWT_SECRET || 'your_jwt_secret_key',
       { expiresIn: '1h' },
     );
@@ -181,8 +174,10 @@ export class AuthService {
         id: true,
         username: true,
         email: true,
+        phone:true,
         role: true,
         createdAt: true,
+        emailVerified:true
       },
     });
     if (!user) {
