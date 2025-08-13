@@ -15,7 +15,7 @@ import { InfrastructureService } from 'src/shared/infrastructure/infrastructure.
 
 @Injectable()
 export class AuthService {
-  private readonly jwtSecret = process.env.JWT_SECRET || 'your_jwt_secret_key';
+  private readonly jwtSecret = process.env.JWT_SECRET;
 
   constructor(
     private readonly prisma: PrismaService,
@@ -68,7 +68,7 @@ export class AuthService {
 
     const token = jwt.sign(
       { sub: user.id, email: user.email, role: user.role },
-      this.jwtSecret,
+      process.env.JWT_SECRET || 'your_jwt_secret_key',
       { expiresIn: '1h' },
     );
 
@@ -108,7 +108,7 @@ export class AuthService {
 
     const token = jwt.sign(
       { sub: user.id, email: user.email, role: user.role },
-      this.jwtSecret,
+      process.env.JWT_SECRET || 'your_jwt_secret_key',
       { expiresIn: '1h' },
     );
 

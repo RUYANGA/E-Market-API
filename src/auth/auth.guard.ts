@@ -35,7 +35,7 @@ export class AuthGuard implements CanActivate {
       }
 
       req['user'] = {
-        id: payload.id,     // always consistent with token signing
+        id: payload.id,
         email: payload.email,
         role:payload.role
 
