@@ -12,7 +12,7 @@ import { RegisterAuthDto } from './dto/register-auth.dto';
 import { loginAuthDto } from './dto/login-auth.dto';
 import { AuthGuard } from './auth.guard';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { verifyOtpDto } from './dto/verify-otp.dto';
+import { VerifyOtpDto } from './dto/verify-otp.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -29,16 +29,10 @@ export class AuthController {
     return this.authService.login(loginAuthDto);
   }
 
-  @UseGuards(AuthGuard)
+//  @UseGuards(AuthGuard)
   @Post('verify')
-  verify(@Body() verifyOtp: verifyOtpDto, @Req() req) {
-    const userId = req.user?.id;
-
-    if (!userId) {
-      throw new UnauthorizedException('Invalid token or user not found');
-    }
-
-    return this.authService.verifyOtp(verifyOtp, userId);
+  verify(@Body() verifyOtp: VerifyOtpDto) {
+    return this.authService.verifyOtp(verifyOtp);
   }
 
   @UseGuards(AuthGuard)
