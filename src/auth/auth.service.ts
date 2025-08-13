@@ -161,9 +161,16 @@ export class AuthService {
       where: { id: otpRecord.id },
     });
 
+    const token = jwt.sign(
+      { sub: user.id, email: user.email, role: user.role },
+      process.env.JWT_SECRET || 'your_jwt_secret_key',
+      { expiresIn: '1h' },
+    );
+
     return {
       success: true,
       message: 'Email verified successfully',
+      token
     };
   }
 
