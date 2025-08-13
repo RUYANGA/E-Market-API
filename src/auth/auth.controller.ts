@@ -37,7 +37,7 @@ export class AuthController {
   @UseGuards(AuthGuard)
   @Get('profile')
   profile(@Req() req) {
-    const userId=req.user.id
+    const userId = req.user.id;
     return this.authService.profile(userId);
   }
 }

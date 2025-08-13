@@ -28,6 +28,7 @@ jobs:
       # 4) Build NestJS app
       - name: Build NestJS app
         run: npm run build
+        continue-on-error: false
 
       # 5) Run tests (workflow will fail if tests fail)
       - name: Run tests

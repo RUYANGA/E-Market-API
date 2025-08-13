@@ -6,8 +6,8 @@ import { EmailModule } from 'src/shared/email/email.module';
 import { InfrastructureService } from 'src/shared/infrastructure/infrastructure.service';
 
 @Module({
-  imports:[EmailModule],
+  imports: [EmailModule],
   controllers: [AuthController],
-  providers: [AuthService,PrismaService,EmailModule,InfrastructureService],
+  providers: [AuthService, PrismaService, EmailModule, InfrastructureService],
 })
 export class AuthModule {}

@@ -4,11 +4,8 @@ import { PrismaModule } from './prisma/prisma.module';
 import { EmailModule } from './shared/email/email.module';
 import { InfrastructureModule } from './shared/infrastructure/infrastructure.module';
 
-
 @Module({
-  imports: [AuthModule,PrismaModule,EmailModule,InfrastructureModule
-    
-  ],
+  imports: [AuthModule, PrismaModule, EmailModule, InfrastructureModule],
   controllers: [],
   providers: [],
 })
