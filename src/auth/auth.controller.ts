@@ -5,20 +5,17 @@ import {
   Req,
   Get,
   UseGuards,
-  UnauthorizedException,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { RegisterAuthDto } from './dto/register-auth.dto';
 import { loginAuthDto } from './dto/login-auth.dto';
 import { AuthGuard } from './auth.guard';
-import { PrismaService } from 'src/prisma/prisma.service';
 import { VerifyOtpDto } from './dto/verify-otp.dto';
 
 @Controller('auth')
 export class AuthController {
   constructor(
     private readonly authService: AuthService,
-    private readonly prisma: PrismaService,
   ) {}
   @Post('register')
   creat(@Body() registerAuthDto: RegisterAuthDto) {
